@@ -1,17 +1,7 @@
 const express = require('express')
 const app = express()
 
-//app.use(express.json()) //converts json of request body to js object
-
-app.use(express.json())
-
-//...
-
-app.post('/api/notes', (request, response) => {
-  const note = request.body
-  console.log(note)
-  response.json(note)
-})
+app.use(express.json()) //converts json of request body to js object
 
 let notes = [
     {
@@ -30,8 +20,26 @@ let notes = [
       important: false
     }
   ]
+const get_new_id = ()=>{
+  return (notes.length>0) ? 1+(Math.max(...notes.map((n)=>{return Number(n.id)}))) : 0
+}
+  app.post('/api/notes', (request, response) => {
+    const body = request.body
+    if (!body.content) {
+      return response.status(400).json({error:'content missing'})
+    }
 
+    const note = {
+      id: get_new_id(),
+      content: body.content,
+      important: Boolean(body.important),
+    }
 
+    notes = notes.concat(note)
+    console.log(note)
+    response.json(note)
+    
+  })
 
 app.get('/',(request,response)=>{
   response.send('<h1>Welcome page</h1>')
