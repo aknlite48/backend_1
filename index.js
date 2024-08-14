@@ -1,6 +1,18 @@
 const express = require('express')
 const app = express()
 
+//app.use(express.json()) //converts json of request body to js object
+
+app.use(express.json())
+
+//...
+
+app.post('/api/notes', (request, response) => {
+  const note = request.body
+  console.log(note)
+  response.json(note)
+})
+
 let notes = [
     {
       id: "1",
@@ -18,6 +30,8 @@ let notes = [
       important: false
     }
   ]
+
+
 
 app.get('/',(request,response)=>{
   response.send('<h1>Welcome page</h1>')
@@ -43,6 +57,7 @@ app.get('/api/notes/:id',(request,response)=>{
 app.delete('/api/notes/:id',(request,response)=>{
   const id = request.params.id
   notes = notes.filter((n)=>{return n.id!==id})
+  response.json(request)
   response.status(204).end()
 })
 
