@@ -3,6 +3,11 @@ const app = express()
 
 app.use(express.json()) //converts json of request body to js object
 
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.static('dist'))
+
 let notes = [
     {
       id: "1",
@@ -26,6 +31,7 @@ const get_new_id = ()=>{
   app.post('/api/notes', (request, response) => {
     const body = request.body
     if (!body.content) {
+      console.log('content missing')
       return response.status(400).json({error:'content missing'})
     }
 
